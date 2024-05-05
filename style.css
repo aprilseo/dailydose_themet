@@ -1,0 +1,154 @@
+html {
+    margin: 0;
+    font-size: 10px;
+    box-sizing: border-box;
+}
+
+body {
+    font-size: 3rem;
+    margin: 0;
+    height:300rem;
+    font-family: Arial, Helvetica, sans-serif;
+    font-style: normal;
+    background-color: white;
+    overflow: hidden;
+    cursor: url('metcursor.jpg'),auto;
+}
+
+main{
+    min-height:100vh;
+    display: flex;
+
+}
+
+.canvas{
+    width:100vw;
+    height:100vh;
+    z-index:0;
+    padding:3rem;
+}
+
+.box{
+    position: absolute;
+    bottom: 40%;
+    text-align: center;
+    width: 100%;
+    align-items: center;
+    transition: opacity 0.9s ease;
+    z-index:1;
+    font-size: 5rem;
+}
+
+.hidden {
+    display: none;
+}
+
+.nav{
+    display:flex;
+    padding:1rem;
+    width:100vw;
+    justify-content: space-between;
+}
+
+.about button{
+    font-size:5rem;
+    padding: 0.5rem 1rem; 
+}
+
+.archive button{
+    font-size:5rem;
+    padding: 0.5rem 1rem; 
+}
+
+.timer{
+    position:absolute;
+    bottom:2rem;
+    left:45%;
+    font-size:5rem;
+    text-align:center;
+    align-items:center;
+}
+
+
+.printButton{
+    bottom:2rem;
+    right:3rem;
+    z-index: 3;
+    display:row;
+
+}
+.art{
+    background-color: white;
+    overflow-y: scroll;
+    font-size: medium;
+    text-align:center;
+    padding:1rem;
+    width:30rem;
+    height:60rem;
+    bottom:0;
+    overflow-x:hidden;
+    z-index: 3;
+    right:3rem;
+    position:absolute;
+    border-radius: 50px 50px 0px 0px;
+}
+
+.art.collapsed {
+    height: 5rem; 
+    overflow: hidden;
+    padding-top:2rem;
+}
+
+.art.expanded {
+    height: 60rem; 
+    overflow-y: scroll;
+    padding-top:4rem;
+}
+
+.art-image{
+    max-width: 50%;
+    height: auto;
+}
+
+.art-wrapper{
+    width: 20vw;
+}
+
+.art-wrapper .info {
+    display: none; /* Hide info initially */
+}
+
+.art-wrapper.dropping .info {
+    display: block; /* Show info when dragging onto art div */
+}
+
+.info{
+    font-size: 3vh;
+    color: blue;
+}
+
+#printButton{
+    color:black
+}
+
+#printButton:hover{
+    color:#f4e9bb
+}
+
+@media print {
+    body, main, .box, #clickableH1, #loadArtworkButton, #printButton {
+        display: none; 
+    }
+
+    .art {
+        background-color: #f4e9bb; 
+        overflow: visible !important; /* Ensure content overflow is visible */
+        width: 100%; /* Set width to 100% for full width in print */
+        height: auto !important; /* Allow height to adjust based on content */
+        padding: 0; 
+        border-radius: 50px 50px 0px 0px;
+    }
+    
+
+}
+

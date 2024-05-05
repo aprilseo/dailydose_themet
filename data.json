@@ -1,0 +1,32 @@
+[
+    {
+        "name": "Mamoun's",
+        "price": "$",
+        "type": "mediterranean"
+    },
+    {
+        "name": "Forma",
+        "price": "$",
+        "type": "italian"
+    },
+    {
+        "name": "Lucien",
+        "price": "$$$",
+        "type": "french"
+    },
+    {
+        "name": "Salt & Charcoal",
+        "price": "$$$$",
+        "type": "american"
+    },
+    {
+        "name": "Mala Project",
+        "price": "$$",
+        "type": "chinese"
+    },
+    {
+        "name": "Roberta's",
+        "price": "$$",
+        "type": "italian"
+    }
+]
