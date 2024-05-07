@@ -170,7 +170,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const currentHour = currentDate.getHours();
         const h1Element = document.getElementById("clickableH1");
         const navElement = document.querySelector(".nav");
-        const aboutElement = document.querySelector(".about");
+        const aboutElement = document.querySelector(".about button");
         const archiveElement = document.querySelector(".archive button");
         const timerElement = document.querySelector(".timer");
 
