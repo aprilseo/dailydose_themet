@@ -1,0 +1,97 @@
+html {
+    margin: 0;
+    font-size: 10px;
+    box-sizing: border-box;
+}
+
+body {
+    font-size: 3rem;
+    margin: 0;
+    height:300rem;
+    font-family: Arial, Helvetica, sans-serif;
+    font-style: normal;
+    background-color: white;
+}
+
+.nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 1rem;
+    position: fixed;
+    width: 100%; /* Make sure nav spans the entire width */
+}
+
+.canvas{
+    width:100vw;
+    height:100vh;
+    z-index:0;
+    padding:10rem;
+}
+
+.box{
+    position: absolute;
+    bottom: 40%;
+    text-align: center;
+    width: 100%;
+    align-items: center;
+    transition: opacity 0.9s ease;
+    z-index:1;
+    font-size: 5rem;
+}
+
+.hidden {
+    display: none;
+}
+
+.nav{
+    display:flex;
+    padding:1rem;
+    width:100vw;
+    justify-content: space-between;
+    z-index: 3;
+}
+
+.main button{
+    font-size:5rem;
+    padding: 0.5rem 1rem; 
+    color:black;
+}
+
+.archive-container {
+    display: flex;
+    flex-wrap: wrap;
+    padding:7rem;
+    width: 100vw;
+}
+
+.archive-item {
+    /*background-color: #ddd;*/
+    padding: 10px;
+    text-align: center;
+    overflow: hidden;
+    width: 25%;
+    position: relative;
+}
+
+.info {
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(255, 255, 255, 0.725);
+    padding: 10px;
+    font-size: 2rem;
+    height: 100%;
+    width: 100%;
+}
+
+.info:hover {
+    opacity: 1;
+}
+
+.art-image{
+    max-width: 100%;
+    height: auto;
+}
+
+

@@ -3,50 +3,71 @@ const API_URL = "https://collectionapi.metmuseum.org/public/collection/v1/object
 const getRandomObjectFromArray = array => {
     return array[Math.floor(Math.random() * array.length)];
 }
+let validObjectIds;
 
 const getAllObjects = async () => {
     const response = await fetch(API_URL);
     const objects = await response.json();
+    console.log(objects)
+    validObjectIds = objects.objectIDs;
+    const gottenObject = getOneObject();
+
     return objects.objectIDs;
 }
 
-const getOneObject = async (objectID) => {
-    const response = await fetch(`${API_URL}/${objectID}`);
-    const object = await response.json();
-    if (object.primaryImageSmall !== "") {
-        return object;
+const pickRandFromArray = (arr) => {
+    return arr[Math.floor(Math.random() * arr.length)]
+}
+const attemptedIDs = localStorage.getItem('failedIdAttempts') || '[]';
+console.log(attemptedIDs)
+const parsedAttemptedIDs = JSON.parse(attemptedIDs);
+
+const getOneObject = async () => {
+    let randomID = pickRandFromArray(validObjectIds)
+
+    if (!parsedAttemptedIDs.includes(randomID)) {
+        const response = await fetch(`${API_URL}/${randomID}`);
+        const object = await response.json();
+        console.log(object)
+        if (object.primaryImageSmall || object.primaryImage) {
+            console.log('ID found that does work')
+            setStoredObjects(object)
+            paintArtworkOnPage(object)
+        } else {
+        console.log('ID found that does not work')
+        parsedAttemptedIDs.push(randomID);
+        const stringyAttempts = JSON.stringify(parsedAttemptedIDs);
+        localStorage.setItem('failedIdAttempts', stringyAttempts)
+        getOneObject();
+        }
+    } else {
+    console.log('ID used that is already in failed attempts')
+    getOneObject();
     }
-    return null; // Skip objects without an image
 }
 
-const getStoredObjectID = () => {
-    return localStorage.getItem('storedObjectID');
+const getStoredObjects = () => {
+    const value = localStorage.getItem('storedObjects');
+    return JSON.parse(value)
 }
 
-const setStoredObjectID = (objectID) => {
-    localStorage.setItem('storedObjectID', objectID);
+const setStoredObjects = (object) => {
+    let currentStoredObjects = localStorage.getItem('storedObjects');
+    let parsedCurrent = JSON.parse(currentStoredObjects);
+    console.log(parsedCurrent)
+    if (parsedCurrent) {
+        parsedCurrent.push(object)
+    } else {
+        parsedCurrent = [];
+    }
+    const stringified = JSON.stringify(parsedCurrent)
+    localStorage.setItem('storedObjects', stringified);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    const storedObjectID = getStoredObjectID();
-    const currentDate = new Date().toDateString();
-    const storedDate = localStorage.getItem('storedDate');
-    const storedImage = localStorage.getItem('storedImage');
-
-    if (storedDate === currentDate && storedObjectID) {
-        getOneObject(storedObjectID).then((object) => {
-            if (object) {
-                console.log(object);
-                paintArtworkOnPage(object);
-            } else {
-                console.log("Stored object has no image, fetching new object.");
-                fetchValidObjectWithImage();
-            }
-        });
-    } else {
-        fetchValidObjectWithImage();
-    }
+    getAllObjects();
 });
+
 
 async function fetchValidObjectWithImage() {
     const objectIDs = await getAllObjects();
@@ -63,49 +84,68 @@ async function fetchValidObjectWithImage() {
     console.error("No objects with valid images found.");
 }
 
+function getRandomValue (min, max) {
+    return Math.random() * (max - min) + min;
+}
+
 const paintArtworkOnPage = (item) => {
     const artWorkContainer = document.querySelector(".canvas");
-    artWorkContainer.innerHTML = `
-    <div class="art-wrapper" draggable="true">
+    const currentArtWrapper = document.createElement('div')
+    const randomTop = getRandomValue(0, window.innerHeight - 50)
+    const randomLeft = getRandomValue(0, window.innerWidth - 50)
+    artWorkContainer.appendChild(currentArtWrapper)
+
+    const noSpaceTitle = item.title.replace(/\s+/g,'');
+    currentArtWrapper.id = noSpaceTitle;
+    currentArtWrapper.setAttribute('draggable', true);
+    currentArtWrapper.classList.add('art-wrapper')
+    currentArtWrapper.style.position = 'absolute';
+    currentArtWrapper.style.left = getRandomValue(0, window.innerWidth) + 'px';
+    currentArtWrapper.style.top = getRandomValue(0, window.innerHeight) + 'px';
+
+    let usedImgSrc = item.primaryImageSmall
+
+    if (usedImgSrc) {
+        usedImgSrc = item.primaryImage;
+    }
+
+    currentArtWrapper.innerHTML = `
         <div class = "imageWrapper">
-            <img class="art-image" src="${item.primaryImageSmall}" alt="${item.title}"/>
+            <img class="art-image" src="${usedImgSrc}" alt="${item.title}" crossOrigin="anonymous"/>
         </div>
         <div class="info">
             <p class="title">${item.title}</p>
             <p class="artist">${item.artistDisplayName}</p>
             <p class="date">${item.objectDate}</p>
             <p class="country">${item.country}</p>
-        </div>
-    </div>`;
+        </div>`;
 
-    const artWrapper = document.querySelector(".art-wrapper");
-
-    artWrapper.addEventListener("dragstart", (event) => {
-        event.dataTransfer.setData("text/plain", "artwork");
-        artWrapper.classList.add("dragging"); // Add dragging class when dragging starts
+        const transferArray = ['artwork', noSpaceTitle];
+        const stringyTransfer = JSON.stringify(transferArray);
+        currentArtWrapper.addEventListener("dragstart", (event) => {
+        event.dataTransfer.setData("text/plain", stringyTransfer);
+        currentArtWrapper.classList.add("dragging"); // Add dragging class when dragging starts
     });
 
-    artWrapper.addEventListener("dragend", () => {
-        artWrapper.classList.remove("dragging"); // Remove dragging class when dragging ends
+    currentArtWrapper.addEventListener("dragend", () => {
+        currentArtWrapper.classList.remove("dragging"); // Remove dragging class when dragging ends
     });
 };
 
-document.addEventListener("DOMContentLoaded", () => {
-    const artSection = document.querySelector(".art");
+const drawAllStoredObjects = () => {
+    const allStoredObjects = getStoredObjects().reverse();
+    console.log(allStoredObjects)
+    if (allStoredObjects) {
+        allStoredObjects.forEach((object, index) => {
+            if (index <= 50) {
+                paintArtworkOnPage(object);
+            }
+        })
+    }
+}
 
-    artSection.addEventListener("dragover", (event) => {
-        event.preventDefault();
-    });
+drawAllStoredObjects();
 
-    artSection.addEventListener("drop", (event) => {
-        event.preventDefault();
-        const data = event.dataTransfer.getData("text/plain");
-        if (data === "artwork") {
-            const artWrapper = document.querySelector(".art-wrapper");
-            artSection.appendChild(artWrapper);
-        }
-    });
-});
 document.addEventListener("DOMContentLoaded", () => {
     const artSection = document.querySelector(".art");
 
@@ -116,9 +156,10 @@ document.addEventListener("DOMContentLoaded", () => {
     artSection.addEventListener("drop", (event) => {
         event.preventDefault();
         const data = event.dataTransfer.getData("text/plain");
-        if (data === "artwork") {
-            const artWrapper = document.querySelector(".art-wrapper");
-            artSection.appendChild(artWrapper); 
+        const parsedTransferData = JSON.parse(data);
+        if (parsedTransferData[0] === "artwork") {
+            const desiredArtWrapper = document.getElementById(parsedTransferData[1]);
+            artSection.appendChild(desiredArtWrapper); 
         }
     });
 });
@@ -130,7 +171,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const h1Element = document.getElementById("clickableH1");
         const navElement = document.querySelector(".nav");
         const aboutElement = document.querySelector(".about");
-        const archiveElement = document.querySelector(".archive");
+        const archiveElement = document.querySelector(".archive button");
         const timerElement = document.querySelector(".timer");
 
         if (currentHour >= 17 || currentHour < 10) { 
@@ -192,12 +233,20 @@ function download( canvas, filename ) {
 }
 
 function onScreenShotClick(event){
-    const element = document.querySelector(".art");
+    const element = document.getElementById('art-to-capture')
 
     var printButton = document.getElementById('printButton');
     printButton.style.opacity = "0";
 
-    html2canvas(element).then( ( canvas ) => {
+    html2canvas(element, { useCORS: true}).then( ( canvas ) => {
+        const imageData = canvas.toDataURL('image/png')
+        const downloadLink = document.createElement('a')
+        downloadLink.href = imageData;
+        downloadLink.download = 'snapshot.png'
+
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink)
         download(canvas, 'screenshot' );
     });
 

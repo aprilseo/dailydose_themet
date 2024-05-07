@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Daily Dose of Art from the Met</title>
     <link rel="stylesheet" href="./reset.css"/>
     <link rel="stylesheet" href="./style.css"/>
@@ -19,7 +18,11 @@
                 <button id="aboutBtn">ABOUT</button>
                 <div id="aboutBox" class="hidden">"Daily Dose of Art from The MET" aims to make the museum more accessible. Drag and drop an image into the print card to view and print. <br> <br> Drag and drop the image into "Today's Dose from The MET" to view the descriptions.</div>
             </div>
-            <div class="archive"><button>ARCHIVE</button></div>
+            <div class="archive">
+                <a href="archive.html">
+                    <button>ARCHIVE</button>
+                </a>
+            </div>
         </div>
         <div class="timer">
             <div id="timerContainer">00:00:00</div>
@@ -27,7 +30,7 @@
         <div class="canvas">
             <!-- <p id="image"></p> -->
         </div>
-        <div class="art">
+        <div id="art-to-capture" class="art">
             <button class="today">TODAY'S DOSE FROM THE MET</button>
             <button id="printButton"><br>(Print Card)</button>
         </div>
