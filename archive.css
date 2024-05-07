@@ -7,10 +7,12 @@ html {
 body {
     font-size: 3rem;
     margin: 0;
-    height:300rem;
+    height:100vh;
     font-family: Arial, Helvetica, sans-serif;
     font-style: normal;
     background-color: white;
+    overflow-x: hidden;
+    overflow-y: scroll;
 }
 
 .nav {

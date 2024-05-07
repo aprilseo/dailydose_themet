@@ -137,7 +137,7 @@ const drawAllStoredObjects = () => {
     console.log(allStoredObjects)
     if (allStoredObjects) {
         allStoredObjects.forEach((object, index) => {
-            if (index <= 50) {
+            if (index <= 20) {
                 paintArtworkOnPage(object);
             }
         })
