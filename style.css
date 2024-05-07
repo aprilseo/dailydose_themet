@@ -106,6 +106,9 @@ main{
     right:3rem;
     position:absolute;
     border-radius: 50px 50px 0px 0px;
+    font-family: "prestige-elite-std", monospace;
+    font-weight: 400;
+    font-style: normal;
 }
 
 .art > .art-wrapper {
@@ -113,6 +116,7 @@ main{
     top: 0 !important;
     left: 0 !important;
     z-index: 4;
+    
 }
 
 .art.collapsed {
@@ -147,10 +151,14 @@ main{
 .info{
     font-size: 3vh;
     color: blue;
+    display: hidden;
 }
 
 #printButton{
-    color:black
+    color:black;
+    font-family: "prestige-elite-std", monospace;
+    font-weight: 400;
+    font-style: normal;
 }
 
 #printButton:hover{
@@ -161,7 +169,11 @@ main{
     body, main, .box, #clickableH1, #loadArtworkButton, #printButton {
         display: none; 
     }
-
+    .info{
+        font-size: 3vh;
+        color: black;
+    }
+  
     .art {
         background-color: #f4e9bb; 
         overflow: visible !important; /* Ensure content overflow is visible */
@@ -173,10 +185,3 @@ main{
     
 
 }
-
-@media only screen and (max-width: 768px) {
-    
-    
-    
-    
-  }
